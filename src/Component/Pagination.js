@@ -79,10 +79,9 @@ const Pagination = () => {
     fetchData(state.currentPage);
   });
   useEffect(() => {
-    if (state.currentPage === 1) {
+    if (state.currentPage <= 1) {
       setPrevDisable(true);
-    }
-    if (state.currentPage === totalPage - 1) {
+    } else if (state.currentPage === totalPage - 1) {
       setNextDisable(true);
     } else {
       setPrevDisable(false);
@@ -111,12 +110,15 @@ const Pagination = () => {
         <button disabled={prevDisable} onClick={prevBtnHandler}>
           Previous
         </button>
-        {(state.currentPage >= 3 && !state.currentPage===totalPage-1) && (
+        {state.currentPage >= 10 && (
           <li>
-            <a 
-            className={state.currentPage === 1  ? "active" : ""}
-            href='!#'
-            onClick={() => paginate(1)}>1...</a>
+            <a
+              className={state.currentPage === 1 ? "active" : ""}
+              href="!#"
+              onClick={() => paginate(1)}
+            >
+              1...
+            </a>
           </li>
         )}
         {pages.map((number) => (
