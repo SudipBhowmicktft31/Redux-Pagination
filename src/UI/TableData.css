@@ -1,0 +1,10 @@
+td{
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    align-items: center;
+}
+tr:nth-child(odd) {
+    background-color: rgb(165, 255, 255);
+    border-radius: 4px;
+  }

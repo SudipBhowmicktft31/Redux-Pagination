@@ -1,0 +1,14 @@
+.center{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+table th{
+border: 1px solid black;
+}
+th{
+    padding: 15px;
+    align-items: center;
+    border-radius: 4px;
+    background-color: rgb(33, 156, 187);
+}
