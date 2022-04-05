@@ -110,7 +110,7 @@ const Pagination = () => {
         <button disabled={prevDisable} onClick={prevBtnHandler}>
           Previous
         </button>
-        {state.currentPage >= 10 && (
+        {state.currentPage > 10 && (
           <li>
             <a
               className={state.currentPage === 1 ? "active" : ""}
