@@ -19,18 +19,11 @@ const userReducer = (state = initialState, action) => {
       };
     case LOADING_SPINNER:
       return {
-        userData: state.userData,
-        totalPage: state.totalPage,
-        currentPage: state.currentPage,
+        ...state,
         isLoadingSpinner: action.payload,
       };
     default:
-      return {
-        userData: state.userData,
-        totalPage: state.totalPage,
-        currentPage: state.currentPage,
-        isLoadingSpinner: state.payload,
-      };
+      return state;
   }
 };
 export default userReducer;
