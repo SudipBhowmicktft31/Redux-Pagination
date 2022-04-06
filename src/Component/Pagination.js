@@ -30,6 +30,12 @@ const paginationReducer = (state, action) => {
         ...state,
         currentPage: action.payload,
       };
+    case "last":
+      return {
+        startIndex: action.payload - 10,
+        endIndex: action.payload - 1,
+        currentPage: state.currentPage,
+      };
     default:
       return state;
   }
@@ -104,6 +110,10 @@ const Pagination = () => {
     paginationDispatch({ type: "selected", payload: pageNumber });
     fetchData(pageNumber);
   };
+  const lastNavigate=(page)=>{
+    paginate(page);
+    paginationDispatch({ type: "last", payload: totalPage }); 
+  }
   return (
     <Card>
       <div className="pagination">
@@ -135,7 +145,7 @@ const Pagination = () => {
         <li>
           <a
             className={state.currentPage === totalPage - 1 ? "active" : ""}
-            onClick={() => paginate(totalPage - 1)}
+            onClick={() => lastNavigate(totalPage - 1)}
             href="!#"
           >
             ...{totalPage - 1}
