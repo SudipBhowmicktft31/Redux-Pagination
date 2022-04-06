@@ -122,34 +122,31 @@ const Pagination = () => {
         </button>
         {state.currentPage > 10 && (
           <li>
-            <a
+            <div
               className={state.currentPage === 1 ? "active" : ""}
-              href="!#"
               onClick={() => paginate(1)}
             >
               1...
-            </a>
+            </div>
           </li>
         )}
         {pages.map((number) => (
           <li key={number}>
-            <a
+            <div
               className={state.currentPage === number ? "active" : ""}
               onClick={() => paginate(number)}
-              href="!#"
             >
               {number}
-            </a>
+            </div>
           </li>
         ))}
         <li>
-          <a
+          <div
             className={state.currentPage === totalPage - 1 ? "active" : ""}
             onClick={() => lastNavigate(totalPage - 1)}
-            href="!#"
           >
             ...{totalPage - 1}
-          </a>
+          </div>
         </li>
         <button onClick={nextBtnHandler} disabled={nextDisable}>
           Next
