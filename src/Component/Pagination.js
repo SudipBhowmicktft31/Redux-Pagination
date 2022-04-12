@@ -13,6 +13,12 @@ const initialState = {
 //Reducer Function for Pagination
 const paginationReducer = (state, action) => {
   switch (action.type) {
+    case "first":
+      return {
+        startIndex: action.payload,
+        endIndex: action.payload + 10,
+        currentPage: state.currentPage,
+      };
     case "previous":
       return {
         startIndex: state.startIndex - 1,
@@ -27,9 +33,11 @@ const paginationReducer = (state, action) => {
       };
     case "selected":
       return {
-        ...state,
+        startIndex: action.payload,
+        endIndex: action.payload + 10,
         currentPage: action.payload,
       };
+
     case "last":
       return {
         startIndex: action.payload - 10,
@@ -50,7 +58,7 @@ const Pagination = () => {
   );
   const dispatch = useDispatch();
   const totalPage = useSelector((state) => state.Reducer.totalPage);
-  // const userData = useSelector((state) => state.Reducer.userData);
+  const userData = useSelector((state) => state.Reducer.userData);
   const pages = [];
 
   const fetchData = async (page) => {
@@ -61,15 +69,17 @@ const Pagination = () => {
     const responseData = await response.json();
 
     const loadedAirlineData = [];
-    for (const key in responseData.data) {
-      loadedAirlineData.push({
-        id: key,
-        name: responseData.data[key].name,
-        trips: responseData.data[key].trips,
-        airlinesWebsite: responseData.data[key].airline[0].website,
-        airlinesName: responseData.data[key].airline[0].name,
-        country: responseData.data[key].airline[0].country,
-      });
+    if (responseData.data) {
+      for (const key in responseData.data) {
+        loadedAirlineData.push({
+          id: key,
+          name: responseData.data[key].name,
+          trips: responseData.data[key].trips,
+          airlinesWebsite: responseData.data[key].airline[0].website,
+          airlinesName: responseData.data[key].airline[0].name,
+          country: responseData.data[key].airline[0].country,
+        });
+      }
     }
     const airlineData = {
       data: loadedAirlineData,
@@ -83,12 +93,14 @@ const Pagination = () => {
   };
   useEffect(() => {
     fetchData(state.currentPage);
-  });
+  }, []);
   useEffect(() => {
     if (state.currentPage <= 1) {
+      setNextDisable(false);
       setPrevDisable(true);
     } else if (state.currentPage === totalPage - 1) {
       setNextDisable(true);
+      setPrevDisable(false);
     } else {
       setPrevDisable(false);
       setNextDisable(false);
@@ -97,25 +109,42 @@ const Pagination = () => {
 
   const prevBtnHandler = () => {
     paginationDispatch({ type: "previous" });
-    fetchData(state.startIndex);
+    // fetchData(state.startIndex - 1);
+    paginate(state.startIndex - 1);
   };
   const nextBtnHandler = () => {
     paginationDispatch({ type: "next" });
-    fetchData(state.startIndex);
+    // fetchData(state.startIndex + 1);
+    paginate(state.startIndex + 1);
   };
   for (let i = state.startIndex; i <= state.endIndex; i++) {
     pages.push(i); //array of total number of pages
   }
   const paginate = (pageNumber) => {
     paginationDispatch({ type: "selected", payload: pageNumber });
-    fetchData(pageNumber);
+
+    if (userData[pageNumber - 1]) {
+      const newData = {
+        data: userData[pageNumber - 1],
+        totalPage: totalPage,
+        currentPage: pageNumber - 1,
+      };
+      dispatch(FetchData(newData));
+    } else {
+      fetchData(pageNumber);
+    }
   };
-  const lastNavigate=(page)=>{
+  const firstNavigate = (page) => {
     paginate(page);
-    paginationDispatch({ type: "last", payload: totalPage }); 
-  }
+    paginationDispatch({ type: "first", payload: page });
+  };
+  const lastNavigate = (page) => {
+    paginate(page);
+    paginationDispatch({ type: "last", payload: totalPage });
+    // fetchData(page);
+  };
   return (
-    <Card>
+    <div>
       <div className="pagination">
         <button disabled={prevDisable} onClick={prevBtnHandler}>
           Previous
@@ -124,7 +153,7 @@ const Pagination = () => {
           <li>
             <div
               className={state.currentPage === 1 ? "active" : ""}
-              onClick={() => paginate(1)}
+              onClick={() => firstNavigate(1)}
             >
               1...
             </div>
@@ -140,19 +169,21 @@ const Pagination = () => {
             </div>
           </li>
         ))}
-        <li>
-          <div
-            className={state.currentPage === totalPage - 1 ? "active" : ""}
-            onClick={() => lastNavigate(totalPage - 1)}
-          >
-            ...{totalPage - 1}
-          </div>
-        </li>
+        {state.currentPage !== totalPage - 1 && (
+          <li>
+            <div
+              className={state.currentPage === totalPage - 1 ? "active" : ""}
+              onClick={() => lastNavigate(totalPage - 1)}
+            >
+              ...{totalPage - 1}
+            </div>
+          </li>
+        )}
         <button onClick={nextBtnHandler} disabled={nextDisable}>
           Next
         </button>
       </div>
-    </Card>
+    </div>
   );
 };
 export default Pagination;

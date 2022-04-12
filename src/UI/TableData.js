@@ -1,8 +1,8 @@
 import React from "react";
-import './TableData.css'
+import "./TableData.css";
 const TableData = (props) => {
   return (
-    <tr>
+    <tr key={props.uniqueId}>
       <td>{props.id}</td>
       <td>{props.name}</td>
       <td>{props.trips}</td>

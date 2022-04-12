@@ -11,6 +11,7 @@
   float: left;
   padding: 8px 16px;
   text-decoration: none;
+  cursor: pointer;
 }
 .pagination div.active {
   background-color: aqua;
@@ -22,15 +23,19 @@
   background-color: #ddd;
   border-radius: 5px;
 }
-.pagination button{
+.pagination button {
   background-color: aqua;
   color: white;
   border-radius: 5px;
   border: none;
   width: 100px;
+  cursor: pointer;
+}
+.pagination button:hover {
+  background-color: rgb(150, 250, 250);
 }
 button:disabled,
-button[disabled]{
+button[disabled] {
   border: none;
   background-color: #cccccc;
   color: #666666;
