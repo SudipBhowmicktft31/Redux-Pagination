@@ -32,11 +32,22 @@ const paginationReducer = (state, action) => {
         currentPage: state.currentPage + 1,
       };
     case "selected":
-      return {
-        startIndex: action.payload,
-        endIndex: action.payload + 10,
-        currentPage: action.payload,
-      };
+      if (
+        action.payload.pageNumber >= action.payload.totalPage - 10 &&
+        action.payload.pageNumber <= action.payload.totalPage
+      ) {
+        return {
+          startIndex: action.payload.pageNumber - 10,
+          endIndex: action.payload.pageNumber,
+          currentPage: action.payload.pageNumber,
+        };
+      } else {
+        return {
+          startIndex: action.payload.pageNumber,
+          endIndex: action.payload.pageNumber + 10,
+          currentPage: action.payload.pageNumber,
+        };
+      }
 
     case "last":
       return {
@@ -108,21 +119,23 @@ const Pagination = () => {
   }, [state.currentPage]);
 
   const prevBtnHandler = () => {
+    paginate(state.startIndex - 1);
     paginationDispatch({ type: "previous" });
     // fetchData(state.startIndex - 1);
-    paginate(state.startIndex - 1);
   };
   const nextBtnHandler = () => {
+    paginate(state.startIndex + 1);
     paginationDispatch({ type: "next" });
     // fetchData(state.startIndex + 1);
-    paginate(state.startIndex + 1);
   };
   for (let i = state.startIndex; i <= state.endIndex; i++) {
     pages.push(i); //array of total number of pages
   }
   const paginate = (pageNumber) => {
-    paginationDispatch({ type: "selected", payload: pageNumber });
-
+    paginationDispatch({
+      type: "selected",
+      payload: { pageNumber, totalPage },
+    });
     if (userData[pageNumber - 1]) {
       const newData = {
         data: userData[pageNumber - 1],
@@ -135,12 +148,12 @@ const Pagination = () => {
     }
   };
   const firstNavigate = (page) => {
-    paginate(page);
     paginationDispatch({ type: "first", payload: page });
+    paginate(page);
   };
   const lastNavigate = (page) => {
-    paginate(page);
     paginationDispatch({ type: "last", payload: totalPage });
+    paginate(page);
     // fetchData(page);
   };
   return (

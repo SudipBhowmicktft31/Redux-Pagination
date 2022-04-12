@@ -1,6 +1,9 @@
 .pagination {
   display: flex;
   justify-content: space-between;
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .pagination li {
   list-style: none;
@@ -39,4 +42,8 @@ button[disabled] {
   border: none;
   background-color: #cccccc;
   color: #666666;
+}
+button:disabled,
+button[disabled]:hover {
+  background-color: #cccccc;
 }
